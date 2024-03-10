@@ -1,0 +1,232 @@
+<%- include('./userLayout/userHeader') %>
+<body>
+
+    <%- include('./userLayout/navBar') %>
+
+	<body>
+
+		
+
+		<!-- Start Hero Section -->
+			<div class="hero">
+				<div class="container">
+					<div class="row justify-content-between">
+						<div class="col-lg-5">
+							<div class="intro-excerpt">
+								<h1>Checkout</h1>
+							</div>
+						</div>
+						<div class="col-lg-7">
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		<!-- End Hero Section -->
+
+		<div class="untree_co-section">
+		    <div class="container">
+		      <div class="row mb-5">
+		        <div class="col-md-12">
+		          <div class="border p-4 rounded" role="alert">
+		            Returning customer? <a href="#">Click here</a> to login
+		          </div>
+		        </div>
+		      </div>
+			  <form action="/checkoutPage" method="post">
+		      <div class="row">
+		        <div class="col-md-6 mb-5 mb-md-0">
+		          <h2 class="h3 mb-3 text-black">Billing Details</h2>
+		          <div class="p-3 p-lg-5 border bg-white">
+
+					<div class="col-md-12">
+						<label for="c_fname" class="text-black">Select Address<span class="text-danger">*</span></label>
+						<select class="form-control" id="select-address" name="selectAddress">
+							<% for(let i=0;i<addresses.length;i++){ %>
+								<option value="<%= addresses[i]._id %>"  %>>
+								  Address <%= i + 1 %>
+								</option>
+								<% } %>
+								<option selected>Select Address</option>
+						</select>
+					</div>
+
+		              <div class="col-md-12">
+		                <label for="c_fname" class="text-black">House/Building Name<span class="text-danger">*</span></label>
+		                <input type="text" class="form-control" id="houseName" name="houseName" value="<%= address.houseName %>">
+		              </div>
+
+					  <div class="form-group row">
+		              <div class="col-md-6">
+		                <label for="c_lname" class="text-black">Place <span class="text-danger">*</span></label>
+		                <input type="text" class="form-control" id="place" name="place" value="<%= address.place %>">
+		              </div>
+
+		              <div class="col-md-6">
+		                <label for="c_companyname" class="text-black">District</label>
+		                <input type="text" class="form-control" id="district" name="district" value="<%= address.district %>">
+		            	</div>
+					</div>
+
+		            <div class="form-group row">
+		              <div class="col-md-6">
+		                <label for="c_address" class="text-black">PIN Code<span class="text-danger">*</span></label>
+		                <input type="text" class="form-control" id="pinCode" name="pinCode" placeholder="Street address" value="<%= address.pinCode %>">
+		              </div>
+		            </div>
+
+
+		            <div class="form-group row">
+		              <div class="col-md-12">
+		                <label for="c_state_country" class="text-black">Email<span class="text-danger">*</span></label>
+		                <input type="text" class="form-control" id="email" name="email" value="<%= address.userEmail %>">
+		              </div>
+		            </div>
+					<input type="text" class="form-control" id="addressId" name="addressId" value="<%= address._id %>">
+		          </div>
+		        </div>
+				
+		        <div class="col-md-6">
+
+		          <div class="row mb-5">
+		            <div class="col-md-12">
+		              <h2 class="h3 mb-3 text-black">Coupon Code</h2>
+		              <div class="p-3 p-lg-5 border bg-white">
+
+		                <label for="c_code" class="text-black mb-3">Enter your coupon code if you have one</label>
+		                <div class="input-group w-75 couponcode-wrap">
+		                  <input type="text" class="form-control me-2" id="c_code" placeholder="Coupon Code" aria-label="Coupon Code" aria-describedby="button-addon2">
+		                  <div class="input-group-append">
+		                    <button class="btn btn-black btn-sm" type="button" id="button-addon2">Apply</button>
+		                  </div>
+		                </div>
+
+		              </div>
+		            </div>
+		          </div>
+
+		          <div class="row mb-5">
+		            <div class="col-md-12">
+		              <h2 class="h3 mb-3 text-black">Your Order</h2>
+		              <div class="p-3 p-lg-5 border bg-white">
+		                <table class="table site-block-order-table mb-5">
+		                  <thead>
+		                    <th>Product</th>
+		                    <th>Total</th>
+		                  </thead>
+		                  <tbody>
+							<% for(let i=0;i<cart.items.length;i++){ %>
+		                    <tr>
+		                      <td><%= cart.items[i].product.productTitle %> <strong class="mx-2">x</strong> <%= cart.items[i].quantity%></td>
+		                      <td>$250.00</td>
+		                    </tr>
+							<% } %>
+							
+		                    <tr>
+		                      <td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
+		                      <td class="text-black"><%= cart.totalPrice %></td>
+		                    </tr>
+		                    <!-- <tr>
+		                      <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
+		                      <td class="text-black font-weight-bold"><strong>$350.00</strong></td>
+		                    </tr>
+		                  </tbody> -->
+		                </table>
+
+		                <!-- <div class="border p-3 mb-3">
+		                  <h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse" href="#collapsebank" role="button" aria-expanded="false" aria-controls="collapsebank">Direct Bank Transfer</a></h3>
+
+		                  <div class="collapse" id="collapsebank">
+		                    <div class="py-2">
+		                      <p class="mb-0">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</p>
+		                    </div>
+		                  </div>
+		                </div>
+
+		                <div class="border p-3 mb-3">
+		                  <h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse" href="#collapsecheque" role="button" aria-expanded="false" aria-controls="collapsecheque">Cheque Payment</a></h3>
+
+		                  <div class="collapse" id="collapsecheque">
+		                    <div class="py-2">
+		                      <p class="mb-0">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</p>
+		                    </div>
+		                  </div>
+		                </div>
+
+		                <div class="border p-3 mb-5">
+		                  <h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse" href="#collapsepaypal" role="button" aria-expanded="false" aria-controls="collapsepaypal">Paypal</a></h3>
+
+		                  <div class="collapse" id="collapsepaypal">
+		                    <div class="py-2">
+		                      <p class="mb-0">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</p>
+		                    </div>
+		                  </div>
+		                </div> -->
+		                <div class="border p-3 mb-5">
+							<label for="cashOnDelivery" class="text-dark" data-bs-toggle="collapse" href="#" role="button" aria-expanded="false" aria-controls="cashOnDelivery"><input type="radio" value="cashOnDelivery" id="cashOnDelivery"> Cash On Delivery</label>
+		                  <!-- <h3 class="h6 mb-0"><a class="d-block"><input type="radio">Cash on delivery</a></h3> -->
+						</div>
+
+		                <div class="form-group">
+		                  <button type="submit" class="btn btn-black btn-lg py-3 btn-block">Place Order</button>
+		                </div>
+
+		             
+		            </div>
+		          </div>
+
+		        </div>
+		      </div>
+			</form>
+		      <!-- </form> -->
+		    </div>
+		  </div>
+
+
+		  <script>
+			const houseName = document.getElementById('houseName')
+			const place = document.getElementById('place')
+			const district = document.getElementById('district')
+			const pinCode = document.getElementById('pinCode')
+			const email = document.getElementById('email')
+			const addressId = document.getElementById('addressId')
+			
+    document.getElementById('select-address').addEventListener('change', function() {
+        const selectedAddressId = this.value; // Get the selected option's value (_id)
+        
+        // Send the selected address ID to the backend using fetch or XMLHttpRequest
+        fetch(`/checkoutPage?selectedAddressId=${selectedAddressId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // body: JSON.stringify({ addressId: selectedAddressId })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle the response from the backend if needed
+            console.log(data);
+			houseName.value = data.houseName
+			place.value = data.place
+			district.value = data.district
+			pinCode.value = data.pinCode
+			email.value = data.userEmail
+			addressId.value = data._id
+
+			// setTimeout(()=>{
+			// 	window.location.reload()
+			// },1000)
+        })
+        .catch(error => {
+            // Handle errors
+            console.error('There was a problem with your fetch operation:', error);
+        });
+    });
+
+		  </script>
+		  <%- include('./userLayout/userFooter') %>

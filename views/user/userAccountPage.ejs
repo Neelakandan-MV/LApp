@@ -1,0 +1,189 @@
+<%- include('./userLayout/userHeader') %>
+<body>
+
+    <%- include('./userLayout/navBar') %>
+
+    <!-- Start Hero Section -->
+    <div class="hero">
+        <% if (locals.alert) { %>
+            <div class="alert alert-danger text-center m-3" id="alert">
+              <%= locals.alert %>
+            </div>
+            <% } %>
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-lg-5">
+                    <div class="intro-excerpt">
+                        
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="hero-img-wrap">
+                        <!-- <img src="static/images/banner-laptop.jpg" class="img-fluid"> -->
+                    </div>
+                </div>
+                <div class="container grey">
+                    <div class="row">
+                        <div class="col-md-4 offset-md-4">
+                            <h1 class="text-center"> User Details</h1>
+                            <form action="/editUser" method="post">
+                                <div class="form-group text-center">
+                                    <% if(user){ %>
+                                    <label for="username">Username:</label>
+                                    <input type="text" name="username" class="form-control translucent-input text-center" id="username" value="<%= user.username %>">
+                                
+                                    <label for="email">Email:</label>
+                                    <input type="email" name="email" class="form-control translucent-input text-center" id="email" value="<%= user.email %>" >
+                                
+                                    <label for="phone">Phone Number:</label>
+                                    <input type="text" name="phone" class="form-control translucent-input text-center" id="phone" value="<%= user.phone %>">
+
+                                    <button type="submit" id="editButton" class="m-2 btn btn-secondary text-center" style="margin-left: 30%; display: none;">Edit user</button>
+                                </form>
+                                
+                                        <% } %>
+                                    </div>
+                                    <div class="col-md-12 offset-md-0">
+                                        <div class="form-group text-center">
+                                        <% if(address.length !== 0){ %>
+                                            <!-- <label for="productVariant" class="form-label">Address</label>
+                                            <select name="productVariant" class="form-control text-center" id="product_variant">
+                                              <% for(let i=0; i<address.length;i++){ %>
+                                                <option value="<%= address[i].houseName %>">
+                                                  <%= address[i].houseName %>,<%= address[i].place %>,<%= address[i].district %>,<%= address[i].pinCode%>
+                                                </option>
+                                                <% } %>
+                                            </select> -->
+                                            <button type="button" class=" mt-2 btn btn-primary text-center"  data-toggle="modal" data-target="#viewAddress">View Address</button>
+                                            <button type="button" class=" mt-2 btn btn-primary text-center"  data-toggle="modal" data-target="#addAddress">Add Address</button>
+                                    <% }else{  %>
+                                        <button type="button" class=" mt-5 btn btn-primary text-center"  data-toggle="modal" data-target="#addAddress">Create Address</button>
+                                   <% } %>
+                                </div>
+                                </div>
+                                
+                                
+                            
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!--modal for add address  -->
+
+<div class="modal fade bd-example-modal-lg" id="addAddress" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="container mb-4">
+            <div class="row">
+                <div class="col-md-4 offset-md-4">
+                    <h1 class="text-center"> Add Address</h1>
+                    <form action="/addAddress" method="post">
+                        <div class="form-group text-center text-danger">
+
+                            <label for="username" class="text-dark">House / Building Name:</label>
+                            <input type="text" class="form-control translucent-input text-center" id="username" name="houseName">
+
+                            <label for="Place" class="text-dark">Place:</label>
+                            <input type="text" class="form-control translucent-input text-center" id="username" name="place">
+
+                            <label for="districts" class="text-dark form-label">District:</label>
+                                            <select class="form-control" id="product_variant" name="districts">
+                                              <% for(let i=0; i<districts.length; i++){ %>
+                                                <option value="<%= districts[i].name%>">
+                                                  <%= districts[i].name%>
+                                                </option>
+                                                <% } %>
+                                            </select>
+                            <label for="pinCode" class="text-dark">PIN Code:</label>
+                            <input type="number" class="form-control translucent-input text-center" id="username" name="pinCode">
+                        
+                            <label for="email">Email:</label>
+                            <input type="hidden" class="form-control translucent-input text-center" id="email" name="email" value="<%= user.email %>">
+                        
+                        
+                        </div>
+                        <button type="submit" class="mt-5 btn btn-secondary text-center" style="margin-left: 30%;">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- modal for View Address -->
+
+<div class="modal fade bd-example-modal-lg" id="viewAddress" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Selected</th>
+                        <th>Addresses</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (let i = 0; i < address.length; i++) { %>
+                    <tr>
+                        <td>
+                            <% if(address[i].selected == true){ %>
+                                <span class="material-symbols-outlined">
+                                    done
+                                    </span>
+                                    <% } %>
+                                    <td><a href="/editAddress?addressId=<%= address[i]._id %>"><%= address[i].houseName%>,<%= address[i].place%>,<%= address[i].district%>,<%= address[i].pinCode%></a></td> 
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+      </div>
+    </div>
+  </div>
+
+
+<style>
+.grey{
+    background-color: rgba(24, 30, 51,0.5)
+}
+label{
+    color: white;
+}
+    
+    </style>
+    <!-- Bootstrap Bundle with Popper -->
+   
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        
+
+</body>
+<script>
+    setTimeout(() => {
+  document.getElementById("alert").style.display = "none";
+}, 3000);
+</script>
+<script>
+    const inputField1 = document.getElementById('username')
+    const inputField2 = document.getElementById('email')
+    const inputField3 = document.getElementById('phone')
+    const editButton =document.getElementById('editButton')
+    inputField1.addEventListener('input',()=>{
+        editButton.style.display='inline-block';
+    })
+    inputField2.addEventListener('input',()=>{
+        editButton.style.display='inline-block';
+    })
+    inputField3.addEventListener('input',()=>{
+        editButton.style.display='inline-block';
+    })
+</script>
+
+</html>

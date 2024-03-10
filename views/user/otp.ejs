@@ -1,0 +1,116 @@
+<%-include('./userLayout/header')%>
+    <style>
+        body {
+            background-color: #f3e0e2;
+        }
+
+        .no-hover {
+            pointer-events: none;
+        }
+    </style>
+    <div class="center-div text-center">
+        <div class="container rounded w-25 signOuter">
+            <h5 class="text-dark mt-5 mb-5">OTP Verification</h5>
+            <% if(locals.emailAlert){ %>
+                <h7 class="text-dark mt-1 mb-1">OTP send to <%= emailAlert %>
+                </h7>
+                <% } %>
+                    <%if(locals.signupAlert){%>
+                        <div class="alert alert-danger text-center" id="signupAlert" role="alert">
+                            <%=(locals.signupAlert)%>
+                        </div>
+                        <%}%>
+
+                            <form action="/otpSignup" method="post">
+
+                                <!-- Input field for OTP -->
+                                <input type="text" placeholder="OTP" name="otp" id="otpInput" class="form-control " />
+                                <!-- Display countdown timer for OTP -->
+                                <div id="otpTimer"></div>
+                                <!-- Send/Resend OTP button -->
+                                <button type="button" class="btn-signup mb-4" id="otpButton"
+                                    onclick="resendOTP()">Resend OTP</button>
+                                <button type="submit" class="btn-signup mb-4" id="signupButton">Sign Up</button>
+                            </form>
+        </div>
+    </div>
+    <script>
+        handleOtpButtonClick()
+        // Function to start the countdown timer
+        function startOtpTimer() {
+            let timer = 90; // OTP validity period in seconds
+            const otpTimer = document.getElementById('otpTimer');
+
+            const countdown = setInterval(() => {
+                // const minutes = Math.floor(timer / 60);
+                const seconds = timer;
+
+                otpTimer.textContent = `OTP valid for:  ${seconds}s`;
+
+                if (timer <= 0) {
+                    clearInterval(countdown);
+                    otpTimer.textContent = 'OTP expired';
+                    document.getElementById('otpButton').textContent = 'Resend OTP';
+                    document.getElementById('otpButton').disabled = false;    //to re enable the button
+                    document.getElementById('otpButton').classList.remove('no-hover');   //to regain hover effect
+                }
+
+                timer--;
+            }, 1000);
+        }
+
+        // Function to handle OTP button click
+        function handleOtpButtonClick() {
+            // Your logic to send OTP goes here
+            startOtpTimer();
+            // document.getElementById('otpButton').textContent = 'Resend OTP';    //changing the text content of the otpButton
+            document.getElementById('otpButton').disabled = true;         //making the button disabled
+            document.getElementById('otpButton').classList.add('no-hover');     // to turn of the hover
+
+        }
+
+        // event listener for the OTP button
+        // document.getElementById('otpButton').addEventListener('click', handleOtpButtonClick);
+    </script>
+    <script>
+        function resendOTP() {
+            // Add logic for triggering OTP resend here
+            // For example, make a fetch request to the server's endpoint
+            fetch('/resendOtp', {
+                method: 'GET',
+                // You can pass additional data if needed
+                // body: JSON.stringify({ email: 'user@example.com' }),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Start the timer only if the request is successful
+                        location.reload();
+                        return response.json();
+                    } else {
+                        // Handle errors, e.g., display an error message
+                        console.error('Error triggering OTP resend:', response.statusText);
+                        return Promise.reject('Error triggering OTP resend');
+                    }
+                })
+                .then(data => {
+                    // You can handle the response data if needed
+                    console.log(data);
+                    // Restart the timer after the OTP is resent
+                    // startOtpTimer(10);
+                    // startResendTimer(60);
+                })
+                .catch(error => {
+                    // Handle unexpected errors
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+    <script>
+        // Function to hide the alert message after 3 seconds
+        setTimeout(() => {
+            document.getElementById("signupAlert").style.display = "none";
+        }, 2000);
+    </script>
+
+
+    <%-include('./userLayout/footer')%>
