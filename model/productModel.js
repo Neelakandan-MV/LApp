@@ -34,11 +34,16 @@ const productSchema = mongoose.Schema({
         type : Array,
         required : true
     },
-     isBlocked : {
+    isBlocked : {
         type : Boolean,
         required : true,
         default : false
-    }
+    },
+    date: {
+        type: Date,
+        default: new Date(),
+        required: true
+    },
 })
 
 module.exports = mongoose.model('product',productSchema)

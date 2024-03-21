@@ -13,14 +13,14 @@ const otpSignupPage = (req,res)=>{
 
 const otpSignup = async(req,res)=>{
     try {
+        const userOtp = req.query.otp
         let userDetails = req.session.userDetails;
         const email = userDetails.email
         let response =await OTP.find({ email: email }).sort({ createdAt: -1 }).limit(1)
         let otp = response[0]?.otp;
-        
-        // let otp = req.session.otp;
-        if(req.body.otp !== otp){
-            res.render('otp',{signupAlert:'Invalid OTP'})
+        if(userOtp !== otp){
+            res.status(200).json({ message: 'failed' });
+            // res.render('otp',{signupAlert:'Invalid OTP'})
         }else{
             //create new user
             const user = new User({
@@ -30,9 +30,11 @@ const otpSignup = async(req,res)=>{
                 phone: userDetails.phone
             })
             await user.save();
-            console.log(user);
+            const newUser = await User.findOne({email:userDetails.email})
             req.session.user = userDetails.email;
-            res.redirect('/')
+            req.session.userId = newUser._id;
+            res.status(200).json({ message: 'success' });
+            
         }
     } catch (error) {
         console.error(error)

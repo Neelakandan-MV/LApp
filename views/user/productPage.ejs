@@ -71,7 +71,7 @@
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
                                                 <ins><span class="text-brand">₹ <%= product.price %></span></ins>
-                                                <ins><span class="old-price font-md ml-15">₹ <%= product.price * 0.25 %></span></ins>
+                                                <ins><span class="old-price font-md ml-15">₹ <%= product.price + product.price * 0.25 %></span></ins>
                                                 <span class="save-price  font-md color3 ml-15">25% Off</span>
                                             </div>
                                         </div>
@@ -108,26 +108,27 @@
                                         </div>
                                         <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                                         <div class="detail-extralink">
-                                            <div class="detail-qty border radius">
+                                            <!-- <div class="detail-qty border radius">
                                                 <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
                                                 <span class="qty-val">1</span>
                                                 <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                            </div>
-                                            <% if(userData){ %>
+                                            </div> -->
+                                            <% if(userData && product.stock >0 ){ %>
                                             <div class="product-extra-link2">
                                                 <form action="/addToCart" method="post">
                                                 <input type="hidden" value="<%= product._id%>" name="productId">
                                                 <input type="hidden" value="<%= user._id%>" name="userId">
                                                 <button type="submit" class="button button-add-to-cart">Add to cart</button>
-                                                
-                                                <!-- <button type="submit" class="button button-add-to-cart" onclick="addToCart('<%= product._id %>')">Add to cart</button> -->
-                                                <!-- <a class="button button-add-to-cart " style="width: 165px;">Add to cart</a> -->
                                                 <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                                                <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                                <!-- <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> -->
                                             </form>
                                             </div><% } %>
                                             <div class="product-extralink">
+                                                <% if(product.stock >0){ %>
                                                 <div class="container" >Availability:<span class="in-stock <% if(product.stock < 5){ %> text-danger <% }else{ %>text-success <% } %> ml-5"><%= product.stock %> Items In Stock</span></a></div>
+                                                <% }else{ %>
+                                                    <div class="container" >Availability:<span class="in-stock text-danger ml-5">Out of Stock</span></a></div>
+                                                    <% } %>
                                             </div>
                                         </div>
                                         <ul class="product-meta font-xs color-grey mt-50">

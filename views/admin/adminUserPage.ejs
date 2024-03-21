@@ -13,40 +13,33 @@
         <section class="content-main">
             <div class="content-header">
                 <h2 class="content-title">User Details</h2>
-                <!-- <div>
-                    <a href="#" class="btn btn-primary"><i class="material-icons md-plus"></i> Create new</a>
-                </div> -->
             </div>
             <div class="card mb-4">
                 <header class="card-header">
                     <div class="row gx-3">
                         <div class="col-lg-3 col-md-6 me-auto">
+                            <input class="form-control container search text-dark" id="search" type="search" placeholder="Search by Email" aria-label="Search">
+                            </div>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const searchInput = document.getElementById('search');
+                                    const tableRows = document.querySelectorAll('.table-light tr');
                             
-                            <input type="text" placeholder="Search..." class="form-control" id="searchbox"></div>
-                        
-                            <div class="col-lg-4 col-md-3 me-auto">
-                        <button class="btn btn-primary" id="searchButton" type="button" onclick="updatequerry()">Search</button></div>
+                                    searchInput.addEventListener('input', function () {
+                                        const searchTerm = searchInput.value.toLowerCase();
                             
-                            <!-- <script>
-                               async  function updatequerry(){
-                                const searchpattern = document.getElementById("searchbox")
-                                const searchvalue =searchpattern.value;
-                                console.log(searchvalue)
-
-                                    const response= await fetch(`/search?searchvalue=${searchvalue}`,{
-                                        method:"GET",
-                                    })
-                                    if (!response){
-                                        throw new Error("error occured");
-
-                                    }
-                                    console.log("success")
-                                    location.reload()
-                                    
-
-                                } -->
-                                </script>
-
+                                        tableRows.forEach(function (row) {
+                                            const categoryName = row.getElementsByTagName('td')[1].textContent.toLowerCase();
+                            
+                                            if (categoryName.includes(searchTerm)) {
+                                                row.style.display = '';
+                                            } else {
+                                                row.style.display = 'none';
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
                         <div class="col-lg-2 col-md-3 col-6">
                             <select onchange="selectsort()" class="form-select " id="selectOptions">
                                 <option value="Select option">Select</option>
@@ -85,46 +78,7 @@
                     </div>
                 </header> <!-- card-header end// -->
                 <div class="card-body">
-                    <!-- <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>User</th>
-                                    <th>Email</th>
-                                    <th>Status</th>
-                                    <th>Registered</th>
-                                    <th class="text-end"> Action </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                                <% for(let i=0; i< users.length; i++) {%>
-                                    
-                                <tr>
-                                    <td width="40%">
-                                        <a href="#" class="itemside">
-                                            <div class="left">
-                                                
-                                            </div>
-                                            <div class="info pl-3">
-                                                <h6 class="mb-0 title"> <%= users[i].name %> </h6>
-                                                <small class="text-muted">Seller ID: #439</small>
-                                            </div>
-                                        </a>
-                                    </td>
-                                    <td><template class="__cf_email__" data-cfemail="2c4940494d42435e1e1c1e1c6c49544d415c4049024f4341">[email&#160;protected]</template></td>
-                                    <td><span class="badge rounded-pill <%= users[i].isActive== true? "alert-success" : "alert-warning"%> " id="status<%= i %>"><%= users[i].isActive==true?"Active" : "blocked"%></span></td>
-                                    <td><%= users[i] %></td>
-                                    <td class="text-end">
-                                        <input type="" value="<%= users[i]._id %>" id="userId<%= i %>" hidden> 
-                                        <a class="btn btn-sm btn-brand rounded font-sm mt-15 toggle-btn" onclick="toggle('<%= i %>')"><%= users[i].isActive==true?"block": "activate"%></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <% } %>
-                                       </tbody>
-                        </table> 
-                    </div> -->
+                    
                     <div class="table-responsive">
                         <% if (users.length > 0) { %>
                         <table class="table table-hover">
@@ -137,7 +91,7 @@
                                     <th class="text-end">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="table-light tr">
                                 <% for (let i = 0; i < users.length; i++) { %>
                                 <tr>
                                     <td width="40%">
@@ -213,7 +167,6 @@ function toggle(index) {
     console.log(userId)
     fetch(`/usertoggle?userId=${userId}`, {
         method: "PUT",
-       
     })
         .then(response => {
             if (!response.ok) {
@@ -228,14 +181,10 @@ function toggle(index) {
             console.error('Fetch error:', error);
         });
         setTimeout(() => {
-    window.location.reload()                                    ///This setTimeOut should be removed before hosting
+        window.location.reload()     //This setTimeOut should be removed before hosting
 }, 800);
 }
 
-
-    </script>
+</script>
 </body>
-
-
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend//page-sellers-list by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:23 GMT -->
 </html>

@@ -25,87 +25,35 @@
                 <header class="card-header">
                     <div class="row gx-3">
                         <div class="col-lg-3 col-md-6 me-auto">
-                            
-                            <input type="text" placeholder="Search..." class="form-control" id="searchbox"></div>
-                        
+                            <input class="form-control container search text-dark" id="search" type="search" placeholder="Search Categories" aria-label="Search">
+                        </div>
                             <div class="col-lg-4 col-md-3 me-auto">
-                        <button class="btn btn-primary" id="searchButton" type="button" onclick="updatequerry()">Search</button></div>
-
-                        
-                            
-                            <!-- <script>
-                               async  function updatequerry(){
-                                const searchpattern = document.getElementById("searchbox")
-                                const searchvalue =searchpattern.value;
-                                console.log(searchvalue)
-
-                                    const response= await fetch(`/search?searchvalue=${searchvalue}`,{
-                                        method:"GET",
-                                    })
-                                    if (!response){
-                                        throw new Error("error occured");
-
-                                    }
-                                    console.log("success")
-                                    location.reload()
-                                    
-
-                                } -->
-                                </script>
-
+                        <button class="btn btn-primary" id="searchButton" type="button" >Search</button></div>
                         <div class="col-lg-2 col-md-3 col-6">
-                            <select onchange="selectsort()" class="form-select " id="selectOptions">
-                                <option value="Select option">Sort</option>
-                                <option value="showall">Show all</option>
-                                <option id="active" value="Disabled" >Disabled</option></a>
-                               <option id="disabled" value="Active">Active</option></a>
-                              
+                            <select onchange="sortTableByStatus()" class="form-select" id="selectOptions">
+                                    <option value="showall">Show all</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Blocked">Blocked</option>
                             </select>
                         </div>
-                        <!-- <script>
-                            async function selectsort()
-                            {
-                              let sortoption =  document.getElementById('selectOptions').value
-                              console.log(sortoption)
-                              
-                              const response = await fetch(`/active?option=${sortoption}`,{
-                                method:'GET'
-                              })
-                              if(!response.ok)
-                              {
-                                throw new Error('error occured')
-                              }
-                              console.log('success')
-                              location.reload()
-                              
-
-                            }
-                        </script> -->
-                        <!-- <div class="col-lg-2 col-md-3 col-6">
-                            <select class="form-select">
-                                <option>Show 20</option>
-                                <option>Show 30</option>
-                                <option>Show 40</option>
-                            </select>
-                        </div> -->
                     </div>
                 </header> <!-- card-header end// -->
                 <div class="card-body">
                     <div class="table-responsive">
                         <% if (products.length > 0) { %>
                         <table class="table table-hover">
+                            
                             <thead>
                                 <tr>
                                     <th>Image</th>
                                     <th>Title</th>
-                                    
                                     <th>Price</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                     <th class="text-end">Edit</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="table-light">
                                 <% for (let i = 0; i < products.length; i++) { %>
                                 <tr>
                                     <td><img src="/<%= products[i].image[0] %>" class="img-sm img-thumbnail" alt="Item"></td>
@@ -192,8 +140,61 @@
     }, 800);
 
 } </script>
+
+
+<script>
+    function sortTableByStatus() {
+        const table = document.querySelector('.table');
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        const selectedStatus = document.getElementById('selectOptions').value;
+        rows.sort((a, b) => {
+            const statusA = a.querySelectorAll('td')[3].innerText.trim();
+            const statusB = b.querySelectorAll('td')[3].innerText.trim();
+
+            // Sort in ascending order
+            if (selectedStatus === 'Active') {
+                if (statusA === 'Active' && statusB === 'Blocked') return -1;
+                if (statusA === 'Blocked' && statusB === 'Active') return 1;
+                return 0;
+            }
+            
+            else if (selectedStatus === 'Blocked') {
+                if (statusA === 'Active' && statusB === 'Blocked') return 1;
+                if (statusA === 'Blocked' && statusB === 'Active') return -1;
+                return 0;
+            }
+            else {
+                window.location.reload()
+            }
+        });
+
+        tbody.innerHTML = '';
+        rows.forEach(row => tbody.appendChild(row));
+    }
+</script>
+
+<!-- code for search -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('search');
+        const tableRows = document.querySelectorAll('.table-light tr');
+
+        searchInput.addEventListener('input', function () {
+            const searchTerm = searchInput.value.toLowerCase();
+
+            tableRows.forEach(function (row) {
+                const categoryName = row.getElementsByTagName('td')[1].textContent.toLowerCase();
+
+                if (categoryName.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
 </body>
-
-
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend//page-sellers-list by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:23 GMT -->
 </html>

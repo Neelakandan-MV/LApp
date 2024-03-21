@@ -45,7 +45,7 @@
                     onkeyup="validateStock()" />
                   <span id="stock-error" style="font-size: 14px; margin-top: -20px"></span>
                 </div>
-
+                
                 <div class="mb-4">
                   <label for="product_category" class="form-label">Category</label>
                   <select name="category" class="form-control" id="product_category">
@@ -88,7 +88,7 @@ space for adding code for displaying brands
                 <div class="mb-4">
                   <label class="form-label">Images</label>
                   <input class="form-control" name="images" id="product_image" value="<%= product.image %>" type="file" multiple
-                    accept="image/png, image/jpeg" onchange="previewImages(event)" />
+                    accept="image/png, image/jpeg" onchange="previewImages(event)"/>
                   <span id="image-error" style="font-size: 14px; margin-top: -20px"></span>
                   <button class="btn btn-secondary mt-2" id="crop-button" style="display: none;" onclick="cropImage()">Crop</button>
                 </div>
@@ -327,7 +327,7 @@ space for adding code for displaying brands
         !validateName() ||
         !validateDescription() ||
         !validatePrice() ||
-        !validateImage() ||
+        // !validateImage() ||
         !validateStock()
       ) {
         submitError.style.display = "block";

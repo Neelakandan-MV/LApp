@@ -3,7 +3,11 @@ const User = require('../../model/user_model')
 const Categories = require('../../model/categoriesModel')
 const Products = require('../../model/productModel')
 const Variant = require('../../model/variantModel')
+const Order = require('../../model/orderModel')
 const multer = require('multer')
+
+
+
 
 //multer
 var storage = multer.diskStorage({
@@ -284,7 +288,8 @@ const productEdit = async (req,res)=>{
                 return res.status(500).json(err);
             }
             const { productTitle, description, price, stock, category, productVariant, productId } = req.body;
-            const images = req.files.map(file => file.filename);
+            let images = req.files.map(file => file.filename);
+            const product = await Products.findOne({_id:productId})
             await Products.findOneAndUpdate({_id:productId},{
                 productTitle: productTitle,
                 description: description,
@@ -292,8 +297,8 @@ const productEdit = async (req,res)=>{
                 stock: stock,
                 category: category,
                 productVariant: productVariant,
-                image: images
-            })
+
+            },{$addToSet:{image:images}})
             .then(()=>{
                 res.redirect('/adminProductPage')
             })
@@ -304,6 +309,42 @@ const productEdit = async (req,res)=>{
     }
 }
 
+const orders = async(req,res)=>{
+    try {
+        const orders = await Order.find().populate('userId')
+        res.render('admin/orderPage',{orders})
+    } catch (error) {
+        console.error(error);
+    }
+}
+const orderDetails = async(req,res)=>{
+    try {
+        const orderId = req.query.orderId
+        // console.log(orderId);
+        const order = await Order.findOne({_id:orderId}).populate('userId').populate('products.product')
+
+        res.render('admin/orderDetailsPage',{order})
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const orderStatusUpdate = async(req,res)=>{
+    try {
+        const orderStatus = req.query.value
+        
+        const orderId = req.query.orderId
+        
+        const order = await Order.findOne({_id:orderId})
+        order.orderStatus = orderStatus
+        order.save()
+        console.log(order);
+        res.status(200).json({ message: 'Order status updated successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
 
 module.exports = {
     adminLoginPage,
@@ -324,5 +365,8 @@ module.exports = {
     createVariant,
     productEditPage,
     productEdit,
+    orders,
+    orderDetails,
+    orderStatusUpdate,
 
 }

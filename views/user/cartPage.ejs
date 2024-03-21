@@ -30,6 +30,7 @@
               <div class="row mb-5">
                 <form class="col-md-12" method="post">
                   <div class="site-blocks-table">
+                    <% if(cart.items.length){ %>
                     <table class="table">
                       <thead>
                         <tr>
@@ -72,6 +73,9 @@
         
                         
                       </tbody>
+                      <% }else{ %>
+                        <h3 class="text-black">You haven't added any products yet, Continue Shopping</h3>
+                        <% } %>
                     </table>
                   </div>
                 </form>
@@ -81,7 +85,11 @@
                 <div class="col-md-6">
                   <div class="row mb-5">
                     <div class="col-md-6">
-                      <a href="/checkoutPage"><button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button></a>
+                      <% if(cart.items.length){ %>
+                      <a href="/checkoutPage"><button class="btn btn-outline-black btn-sm btn-block">Buy Now</button></a>
+                      <% }else{ %>
+                        <a href="/shop"><button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button></a>
+                        <% } %>
                     </div>
                   </div>
                   
@@ -99,7 +107,9 @@
                           <span class="text-black">Total</span>
                         </div>
                         <div class="col-md-6 text-right">
+                          <% if(cart.items.length){ %>
                           <strong class="text-black">$<%= cart.totalPrice %></strong>
+                          <% } %>
                         </div>
                       </div>
                     </div>

@@ -31,7 +31,11 @@ userRouter.get('/resendOtp',otpController.resendOtp)
 //shop
 userRouter.get('/shop',userController.shop)
 
+//productpage
+
 userRouter.get('/productPage',userController.productPages)
+
+//userAccount
 
 userRouter.get('/userAccount',userController.userAccountPage)
 
@@ -52,7 +56,20 @@ userRouter.get('/deleteCart',userController.deleteProductFromCart)
 
 //checkout Page
 userRouter.get('/checkoutPage',userController.checkoutPage)
-userRouter.patch('/checkoutPage',userController.checkoutPageRefreshed)
-userRouter.post('/checkoutPage',userController.checkout)
+userRouter.patch('/checkoutPage',userController.checkoutPageRefreshedForAddress)
+userRouter.post('/checkoutPage',userController.cashOnDelivery)
+//razorPay
+userRouter.post('/razorPay',userController.razorPay)
+userRouter.post('/orderPlacing',userController.orderPlacing)
+
+userRouter.get('/orders',userController.order)
+userRouter.get('/orderDetails/:id',userController.orderDetailsPage)
+userRouter.get('/orderCancel',userController.orderCancel)
+userRouter.get('/orderReturn',userController.orderReturn)
+
+//change password
+userRouter.get('/changePassword',userController.changePasswordPage)
+userRouter.post('/changePassword',userController.changePassword)
+
 
 module.exports = userRouter;

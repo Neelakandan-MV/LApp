@@ -45,4 +45,9 @@ adminRouter.post('/createProduct',adminController.addProduct)
 adminRouter.get('/productEdit',adminController.productEditPage)
 adminRouter.post('/productEdit',adminController.productEdit)
 
+//order page
+adminRouter.get('/adminOrders',adminController.orders)
+adminRouter.get('/adminOrderDetails',adminController.orderDetails)
+adminRouter.patch('/orderStatusUpdate',adminController.orderStatusUpdate)
+
 module.exports = adminRouter;

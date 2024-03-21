@@ -12,8 +12,8 @@
         <div class="container rounded w-25 signOuter">
             <h5 class="text-dark mt-5 mb-5">OTP Verification</h5>
             <% if(locals.emailAlert){ %>
-                <h7 class="text-dark mt-1 mb-1">OTP send to <%= emailAlert %>
-                </h7>
+                <h7 class="text-dark mt-1 mb-1">OTP send to</h7><br><small> <%= emailAlert %></small><br>
+                
                 <% } %>
                     <%if(locals.signupAlert){%>
                         <div class="alert alert-danger text-center" id="signupAlert" role="alert">
@@ -21,57 +21,79 @@
                         </div>
                         <%}%>
 
-                            <form action="/otpSignup" method="post">
-
-                                <!-- Input field for OTP -->
-                                <input type="text" placeholder="OTP" name="otp" id="otpInput" class="form-control " />
-                                <!-- Display countdown timer for OTP -->
+                            <!-- <form action="/otpSignup" method="post"> -->
+                                <input type="text" placeholder="OTP" name="otp" id="otpInput" class="form-control " /><br>
+                                <small id="otpError" style="color: red;"></small><br>
                                 <div id="otpTimer"></div>
-                                <!-- Send/Resend OTP button -->
-                                <button type="button" class="btn-signup mb-4" id="otpButton"
+                                
+                                <button type="button" style="display:none ;" class="btn-signup mb-4" id="otpButton"
                                     onclick="resendOTP()">Resend OTP</button>
-                                <button type="submit" class="btn-signup mb-4" id="signupButton">Sign Up</button>
-                            </form>
+                                <button type="submit" class="btn-signup mb-4" id="signupButton" onclick="sendOTP()">Submit</button>
+                            <!-- </form> -->
         </div>
     </div>
     <script>
-        handleOtpButtonClick()
+            startOtpTimer();
+        
         // Function to start the countdown timer
+
         function startOtpTimer() {
-            let timer = 90; // OTP validity period in seconds
+            let timer = 10; // OTP validity 
             const otpTimer = document.getElementById('otpTimer');
 
             const countdown = setInterval(() => {
-                // const minutes = Math.floor(timer / 60);
                 const seconds = timer;
-
                 otpTimer.textContent = `OTP valid for:  ${seconds}s`;
 
                 if (timer <= 0) {
                     clearInterval(countdown);
                     otpTimer.textContent = 'OTP expired';
-                    document.getElementById('otpButton').textContent = 'Resend OTP';
-                    document.getElementById('otpButton').disabled = false;    //to re enable the button
-                    document.getElementById('otpButton').classList.remove('no-hover');   //to regain hover effect
+                    // document.getElementById('otpButton').textContent = 'Resend OTP';
+                    // document.getElementById('otpButton').disabled = false;    //to re enable the button
+                    // document.getElementById('otpButton').classList.remove('no-hover');   //to regain hover effect
+                    document.getElementById('otpButton').style.display = 'inline-block';
                 }
 
                 timer--;
             }, 1000);
         }
-
-        // Function to handle OTP button click
-        function handleOtpButtonClick() {
-            // Your logic to send OTP goes here
-            startOtpTimer();
-            // document.getElementById('otpButton').textContent = 'Resend OTP';    //changing the text content of the otpButton
-            document.getElementById('otpButton').disabled = true;         //making the button disabled
-            document.getElementById('otpButton').classList.add('no-hover');     // to turn of the hover
-
-        }
-
-        // event listener for the OTP button
-        // document.getElementById('otpButton').addEventListener('click', handleOtpButtonClick);
+    // document.getElementById('otpButton').textContent = 'Resend OTP';    //changing the text content of the otpButton    
     </script>
+
+    <script>
+       function sendOTP(){
+    const OTP = document.getElementById('otpInput').value;
+    
+    fetch(`/otpSignup?otp=${OTP}`, {
+        method: 'POST'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json(); 
+    })
+    .then(data => {
+        
+        if (data.message === "success") {
+            window.location.href = "/";
+        } else if(data.message === "failed") {
+           const otpError = document.getElementById('otpError')
+           otpError.textContent = "Invalid OTP"
+        }
+    })
+    .catch(error => {
+        console.error('Fetch Error:', error);
+        
+    });
+}
+
+            
+            
+            
+    
+    </script>
+    
     <script>
         function resendOTP() {
             // Add logic for triggering OTP resend here
@@ -110,6 +132,103 @@
         setTimeout(() => {
             document.getElementById("signupAlert").style.display = "none";
         }, 2000);
+
+       
+
+    </script>
+
+
+<script>
+
+    let isOtpMatched = null
+    console.log(isOtpMatched)
+
+
+    async function gfjf(){
+      try {
+        const gmail = document.getElementById("Email").value
+        const response= await fetch(`/sendotp?email=${gmail}`,{
+            method: "GET",
+
+        })
+        if(!response.ok){
+            throw new Error("Internal server error")
+        }
+        const data = await response.json()
+        console.log(data);
+        const button = document.getElementById("time")
+        button.disabled = true;
+        let count = 60;
+
+        const countdown = setInterval(()=>{
+            if(count > 0) {
+                button.textContent = `${count}`;
+                button.classList.add("bg-warning");
+                count --;
+            }else{
+                clearInterval(countdown);
+                button.textContent ="Resend Otp"
+                button.disabled = false;
+            }
+        },1000)
+        const otpBox= document.getElementById("otpBox")
+        otpBox.focus();
+
+        
+
+        otpBox.addEventListener("input", async()=>{
+            if(otpBox.value.length === 4){
+                const otpResponse = await fetch(`/verifyotp?otp=${otpBox.value}`,{
+                    method : "GET",
+                })
+                if(!otpResponse.ok){
+                    throw new Error("otp validation error")
+                }
+                const otpData = await otpResponse.json();
+                if(otpData=="otp Matched"){
+                    clearInterval(countdown);
+                    button.textContent= "";
+                    button.textContent = "verified"
+                    button.disabled= "true"
+                    button.classList.remove("bg-warning")
+                    button.classList.add("bg-primary")
+                    isOtpMatched = true
+                
+
+                    setTimeout(()=>{
+                        isOtpMatched =null;
+                        
+                    },90000)
+                    
+                }else if(otpData=="otp doesnot matched"){
+                    clearInterval(countdown);
+                    button.textContent = "invalid OTP"
+                    button.classList.remove("bg-warning");
+                    button.classList.add("bg-red")
+                    isOtpMatched= false
+                    setTimeout(()=>{
+                        button.textContent = " Resend otp"
+                        button.disabled =false;
+
+                    },7000)
+                    
+                }
+            }
+        })
+
+
+
+
+
+      } catch (error) {
+
+        console.log(error.message)
+      
+        
+      }
+
+
+    }
     </script>
 
 

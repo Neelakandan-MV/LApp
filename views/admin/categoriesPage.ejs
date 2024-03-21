@@ -10,7 +10,7 @@
                     <p>Add or edit a category</p>
                 </div>
                 <div>
-                    <input type="text" placeholder="Search Categories" class="form-control bg-white">
+                    <input class="form-control container search text-dark" id="search" type="search" placeholder="Search Categories" aria-label="Search">
                 </div>
                 <div>
                     <a href="/createCategory" class="btn btn-primary"><i class="material-icons md-plus"></i> Create new</a>
@@ -19,35 +19,8 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <!-- <div class="col-md-3">
-                            <form>
-                                <div class="mb-4">
-                                    <label for="product_name" class="form-label">Name</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="product_name" />
-                                </div>
-                                <div class="mb-4">
-                                    <label for="product_slug" class="form-label">Slug</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="product_slug" />
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label">Parent</label>
-                                    <select class="form-select">
-                                        <option>Clothes</option>
-                                        <option>T-Shirts</option>
-                                    </select>
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label">Description</label>
-                                    <textarea placeholder="Type here" class="form-control"></textarea>
-                                </div>
-                                <div class="d-grid">
-                                    <button class="btn btn-primary">Create category</button>
-                                </div>
-                            </form>
-                        </div> -->
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                
                                 <% if( cat.length > 0 ){ %>
                                 <table class="table table-hover">
                                     <thead>
@@ -60,14 +33,9 @@
                                             <th class="text-end">Edit</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody class="table-light">
                                         <% for (let i = 0; i < cat.length; i++) { %>
                                         <tr>
-                                            <td class="text-center">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value="" />
-                                                </div>
-                                            </td>
                                             <td><%= i +1 %><input type="hidden" id="catDetails<%= i %>" value="<%= cat[i]._id %>"></td>
                                             <td><b><%= cat[i].category %></b></td>
                                             <td><%= cat[i].description %></td>
@@ -78,8 +46,8 @@
                                                 </span> </a>
                                             </td>
                                         </tr>    
+                                        <% } %>
                                     </tbody>
-                                    <% } %>
                                 </table>
                                 <% }else{ %>
                                     <h1 class="text-center text-secondary mt-5">No users found in the database</h1>
@@ -90,6 +58,28 @@
                 </div> <!-- card body .// -->
             </div> <!-- card .// -->
         </section> <!-- content-main end// -->
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const searchInput = document.getElementById('search');
+                const tableRows = document.querySelectorAll('.table-light tr');
+        
+                searchInput.addEventListener('input', function () {
+                    const searchTerm = searchInput.value.toLowerCase();
+        
+                    tableRows.forEach(function (row) {
+                        const categoryName = row.getElementsByTagName('td')[1].textContent.toLowerCase();
+        
+                        if (categoryName.includes(searchTerm)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        </script>
+        
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">

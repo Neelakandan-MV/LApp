@@ -11,7 +11,7 @@
         <div class="collapse navbar-collapse" id="navbarsFurni">
             <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
                 <% if(page){ %>
-                <li class=<% if(page == 'home'){%>"active"<% }else{ %>"nav-item" <% } %>nav-item">
+                <li class=<% if(page == 'home'){%>"active"<% }else{ %>"nav-item" <% } %>"nav-item">
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class=<% if(page == 'shop'){%>"active"<% }else{ %>"nav-item" <% } %>><a class="nav-link" href="/shop">Shop</a></li>
@@ -29,7 +29,9 @@
              -->
 
             <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-                <li><a class="nav-link" href="/cart"><img src="static/images/cart.svg" ></a></li>
+                <% if(userData && cart){ %>
+                <li><a class="nav-link" href="/cart"><img src="static/images/cart.svg"><span class="badge text-bg-secondary"><%= cart.items.length %></span></a></li>
+                <% } %>
                 <% if(userData) { %>
                     <a class="nav-link" href="/userLogout">
                         <!-- <img src="static/images/user.svg"> -->

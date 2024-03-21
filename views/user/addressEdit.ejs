@@ -16,7 +16,7 @@
                     <input type="text" class="form-control translucent-input text-center" id="username" name="place" value="<%= address.place %>">
 
                     <label for="districts" class="text-dark form-label ">District:</label>
-                                    <select class="form-control text-center id="product_variant" name="districts">
+                                    <select class="form-control text-center" id="product_variant" name="districts">
                                       <% for(let i=0; i<districts.length; i++){ %>
                                         <option value="<%= districts[i].name%>" <% if(districts[i].name == address.district){%> selected <% } %>>
                                           <%= districts[i].name%>

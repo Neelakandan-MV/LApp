@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title><%= title %></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
@@ -40,15 +40,16 @@
       visibility: hidden;
     }
     .form-outline .error small {
-	visibility: visible;
+	  visibility: visible;
 }
 
-    .form-outline.success input {
-	border-color: #2ecc71;
-}
 
-.form-control.error input {
+.form-control-error input {
 	border-color: #e74c3c;
+}
+
+small{
+  color: #e74c3c;
 }
   </style>
   <section class="vh-15y0 bg-image">
@@ -83,8 +84,8 @@
 
                   <div class="form-outline mb-2">
                     
-                    <input type="password" id="password" placeholder="Password" name="password" class="form-control form-control-lg" oninput="validatePassword()"/>
-                    <h2 style="font-size: 10px; color:red;" id="password-error"></h2>
+                    <input type="password" id="password" placeholder="Password" name="password" class="form-control form-control-lg" />
+                    <h2 style="font-size: 12px; color:red;" id="password-error"></h2>
                     <!-- <label class="form-label" for="form3Example4cg">Password</label> -->
                     <small>Error message</small>
                     <!-- <span id="password-error"></span> -->
@@ -145,13 +146,13 @@
     const password2Value = password2.value.trim();
     const phoneNumberValue = phoneNumber.value.trim();
 
-    var regexPattern = /^[^\d]+$/;
-    var regexPatternforPhone = /[^]/;
+    var regexPatternForUserName = /^[^\d]+$/;
+    var regexPatternforPhone = /^[789]\d{9}$/;
 
 
     if (usernameValue === '') {
       setErrorFor(username, 'Username cannot be blank');
-    } else if(!regexPattern.test(usernameValue)){
+    } else if(!regexPatternForUserName.test(usernameValue)){
       setErrorFor(username, 'Username cannot be a number')
     }
      else {
@@ -168,7 +169,9 @@
 
     if (passwordValue === '') {
       setErrorFor(password, 'Password cannot be blank');
-    } else {
+    }else if (/^(?=.*[a-zA-Z])(?=.*\d).{8,}$/.test(passwordValue) === false) {
+        setErrorFor(password,'At least one letter and one number must be included in the password, which must be eight characters.') 
+        }else {
       setSuccessFor(password);
     }
 
@@ -183,13 +186,13 @@
     if(phoneNumberValue === ''){
       setErrorFor(phoneNumber,'Phone Number cannot be blank')
     }else if(!regexPatternforPhone.test(phoneNumberValue)){
-      setErrorFor(phoneNumber,'Phone Number cannot be a Character')
+      setErrorFor(phoneNumber,'Invalid Phone Number')
     }else{
       setSuccessFor(phoneNumber)
     }
 
     if (
-        !form.querySelector('.form-outline.error') &&
+        !form.querySelector('.form-control-error') &&
         usernameValue &&
         phoneNumberValue &&
         emailValue &&
@@ -205,7 +208,7 @@
   function setErrorFor(input, message) {
     const formControl = input.parentElement;
     const small = formControl.querySelector('small');
-    formControl.className = 'form-control error';
+    formControl.className = 'form-control-error';
     small.innerText = message;
     
   }
@@ -220,7 +223,7 @@
   }
 
 </script>
-<!-- email and password validation -->
+<!-- email and password realtime validation -->
 <script>
   
 function validateEmail() {
@@ -238,19 +241,7 @@ function validateEmail() {
         }
     }
 
-function validatePassword(){
-  const passwordError = document.getElementById('password-error')
-  const isValidPass = password.value.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*()\-_+=\[\]{}|\\:;"'<>,.?/]).{4,}$/)
 
-  if(!isValidPass){
-    passwordError.innerHTML = "Password must contain at least 4 characters one uppercase,lowercase,digit and special character";
-    return false;
-    
-  }else {
-    passwordError.innerHTML = '';
-    return true;
-  }
-}
 
 
 </script>
